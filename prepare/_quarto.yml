@@ -1,0 +1,81 @@
+project:
+  type: book
+  execute-dir: project  # quarto should look to the project root (pendata)  
+  output-dir: _webpage
+
+format:
+  html:
+    theme: cosmo
+    code-fold: true
+    number-depth: 5
+    toc-depth: 5
+    toc-expand: true
+    collapse-level: 1
+
+editor_options:
+  chunk_output_type: console
+
+execute:
+  eval: true
+  echo: true
+  output: false
+  freeze: false  # auto: during global project renders, re-render only when source changes
+
+book:
+  title: "GNYHA preparation"
+  author: "Don Boyd"
+  date: today
+  date-format: long
+  sidebar:
+    collapse-level: 1
+  chapters:
+    - index.qmd
+    # - steps.qmd
+    # - part: "Extract Data"
+    #   chapters:
+    #     - get_and_save_extracted_data.qmd
+    #     - test_extracted_data.qmd
+    #     # extracted data stays in the work_data folder and does not need to be staged
+    # - part: "Amortization Bases"
+    #   chapters:
+    #     - amortization_bases.qmd
+    #     - test_amortization_bases.qmd
+    #     - stage_amortization_bases.qmd
+    # - part: "Benefit Rules"
+    #   chapters:
+    #     - benefit_rules.qmd
+    #     - benefit_rules_test_cases.qmd
+    #     - test_benefit_rules.qmd
+    #     - stage_benefit_rules_and_test_cases.qmd
+    # - part: "Constants"
+    #   chapters:
+    #     - constants_assumptions.qmd
+    #     - test_constants_assumptions.qmd
+    #     - stage_constants_assumptions.qmd
+    # - part: "Retirees"
+    #   chapters:
+    #     - retirees.qmd
+    #     - test_retirees.qmd
+    #     - stage_retirees.qmd
+    # - part: "Retirement Rates"
+    #   chapters:
+    #     - retirement_rates.qmd
+    #     - test_retirement_rates.qmd
+    #     - stage_retirement_rates.qmd        
+    # - part: "Salary & Headcount"
+    #   chapters:
+    #     - headcount_salary.qmd
+    # - part: "Salary growth"        
+    #   chapters:
+    #     - salary_growth.qmd        
+    # - part: "Withdrawals"
+    #   chapters:
+    #     - withdrawal.qmd
+    # - part: "Assemble list for `pendata` package"
+    #   chapters:
+    #     - assemble_list.qmd
+    # - part: "Make params"
+    #   chapters:
+    #     - make_params.qmd
+
+# GROOT <- rprojroot::find_root(rprojroot::has_file(".git/index"))
