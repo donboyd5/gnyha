@@ -7,7 +7,8 @@ render-report:
 	cd report && quarto render
 
 clean-prep:
-	cd prepare && rm -rf results
+# cd prepare && rm -rf results
+	Rscript -e "unlink('prepare/results', recursive = TRUE)"
 
 clean-report:
 	cd report && rm -rf results
