@@ -1,0 +1,32 @@
+---
+title: "GNYHA report"
+format:
+  typst:
+    toc: true
+    section-numbering: 1.1.a
+    columns: 2
+---
+
+<!-- format:
+  typst:
+    
+    author: "Don Boyd"
+    date: today
+    date-format: long      
+    toc: true
+    section-numbering: 1.1.a
+    columns: 2   -->
+
+# Introduction
+
+some text
+
+## Now another section
+
+more text
+
+### Another subsection
+
+then back up to level 2
+
+## Level 2

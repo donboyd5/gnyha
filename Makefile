@@ -1,4 +1,5 @@
 # Windows: install gnu make 
+# not good for windows, maybe use with linux
 
 render-prep:
 	cd prepare && quarto render

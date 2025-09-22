@@ -1,1 +1,12 @@
 # Introduction
+
+## Goals
+
+
+## Main steps
+
+-  Develop representative households
+   -  Examine GNYHA data on workers
+   -  Examine ACS microdata on workers by occupation, region of state, family characteristics, and more
+   -  OSC data on residential property rates overlapping layers of government
+
