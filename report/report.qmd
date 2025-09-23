@@ -5,6 +5,7 @@ format:
     toc: true
     section-numbering: 1.1.a
     columns: 2
+    keep-typ: true
 ---
 
 <!-- format:
@@ -57,8 +58,9 @@ and another table here
 #table(
   columns: 4,
   table.header[Column 1][Column 2][Column 3][Column 4],
-  [Row 1, Cell 1. Direct content.], [Row 1, Cell 2. Direct.], [Row 1, Cell 3. Direct.], [Row 1, Cell 4. Direct.],
+  [Row 1, Cell 1], [Row 1, Cell 2], [Row 1, Cell 3], [Row 1, Cell 4],
   ..row2,
-  [Row 3, Cell 1. Direct.], cell_3_2, [Row 3, Cell 3. Direct.], [Row 3, Cell 4. Direct.]
+  [Row 3, Cell 1], cell_3_2, [Row 3, Cell 3], [Row 3, Cell 4]
 )
+
 ```
