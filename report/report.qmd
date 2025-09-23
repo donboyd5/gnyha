@@ -30,3 +30,35 @@ more text
 then back up to level 2
 
 ## Level 2
+
+Put a table here
+
+```{=typst}
+#table(
+  columns: 4,
+  table.header[Col 1][Col 2][Col 3][Col 4],
+  [Row 1, Cell 1], [Row 1, Cell 2], [Row 1, Cell 3], [Row 1, Cell 4],
+  [Row 2, Cell 1], [Row 2, Cell 2], [Row 2, Cell 3], [Row 2, Cell 4],
+  // ... more rows of 4 cells
+)
+
+```
+
+and another table here
+
+```{=typst}
+#let row2 = ([Row 2, Cell 1. This row uses a variable for each cell.],
+             [Row 2, Cell 2. Edit as needed.],
+             [Row 2, Cell 3. You can put paragraphs or sentences.],
+             [Row 2, Cell 4. Variable example ends.])
+
+#let cell_3_2 = [This is Row 3, Cell 2. Only this cell uses a variable.]
+
+#table(
+  columns: 4,
+  table.header[Column 1][Column 2][Column 3][Column 4],
+  [Row 1, Cell 1. Direct content.], [Row 1, Cell 2. Direct.], [Row 1, Cell 3. Direct.], [Row 1, Cell 4. Direct.],
+  ..row2,
+  [Row 3, Cell 1. Direct.], cell_3_2, [Row 3, Cell 3. Direct.], [Row 3, Cell 4. Direct.]
+)
+```
