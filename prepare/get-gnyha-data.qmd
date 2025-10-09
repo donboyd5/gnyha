@@ -17,14 +17,20 @@ editor:
 # pak::pak("r-lib/testthat")
 # pak::pak("r-lib/rlang")
 # pak::pak("r-lib/here")
+# pak::pak("r-lib/rprojroot")
+# remotes::install_github("ArcadeAntics/this.path")
+
 library(rlang)
 library(here)
+library(this.path)
+library(rprojroot)
+library(fs)
+
 library(tidyverse)
-tprint <- 25 # default tibble print
+tprint <- 50 # default tibble print
 options(tibble.print_max = tprint, tibble.print_min = tprint) # show up to tprint rows
 library(readxl)
 library(vroom)
-library(fs)
 library(skimr)
 library(Hmisc)
 library(gt)
@@ -36,7 +42,14 @@ library(btools)
 ```{r}
 #| label: locations
 
-DDATA <- here::here("../", "data")
+# non-robust way to find the quarto project root that will work interactively and during renders from terminal
+# QROOT <- Sys.getenv("QUARTO_PROJECT_ROOT") # during project renders
+# if (QROOT == "") {
+#   QROOT <- this.path::this.dir()
+# } # during interactive work
+
+GROOT <- rprojroot::find_root(rprojroot::has_file(".git/index"))
+DDATA <- fs::path(GROOT, "data")
 
 ```
 
