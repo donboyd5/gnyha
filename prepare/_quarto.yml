@@ -30,6 +30,7 @@ book:
     collapse-level: 1
   chapters:
     - index.qmd
+    - get-gnyha-data.qmd
     # - steps.qmd
     # - part: "Extract Data"
     #   chapters:

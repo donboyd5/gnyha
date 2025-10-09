@@ -1,0 +1,65 @@
+---
+editor_options: 
+  chunk_output_type: console
+editor:
+  markdown:
+    canonical: true  
+---
+
+# Get GNYHA data
+
+```{r}
+#| label: setup
+
+# install.packages("pak")
+# pak::pak("r-lib/devtools")
+# pak::pak("r-lib/usethis")
+# pak::pak("r-lib/testthat")
+# pak::pak("r-lib/rlang")
+# pak::pak("r-lib/here")
+library(rlang)
+library(here)
+library(tidyverse)
+tprint <- 25 # default tibble print
+options(tibble.print_max = tprint, tibble.print_min = tprint) # show up to tprint rows
+library(readxl)
+library(vroom)
+library(fs)
+library(skimr)
+library(Hmisc)
+library(gt)
+# devtools::install_github("donboyd5/btools")
+library(btools)
+
+
+```
+
+## Get regions
+
+Notes:
+
+-   Three hospitals are in multiple regions but assigned to New York City:
+
+![](images/paste-1.png)
+
+```{r}
+
+DDATA <- here::here("data")
+cnames <- c(
+  "opcert_2023",
+  "hosp_2023",
+  "opcert_2024",
+  "hosp_2024",
+  "dolregion",
+  "note"
+)
+regions <- read_excel(
+  fs::path(DDATA, "ex35_data_f.xlsx"),
+  sheet = "Region",
+  col_names = cnames,
+  col_types = "text",
+  skip = 2
+)
+glimpse(regions)
+
+```
