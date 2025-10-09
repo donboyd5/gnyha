@@ -9,7 +9,7 @@ editor:
 # Get GNYHA data
 
 ```{r}
-#| label: setup
+#| label: packages
 
 # install.packages("pak")
 # pak::pak("r-lib/devtools")
@@ -31,6 +31,12 @@ library(gt)
 # devtools::install_github("donboyd5/btools")
 library(btools)
 
+```
+
+```{r}
+#| label: locations
+
+DDATA <- here::here("../", "data")
 
 ```
 
@@ -46,7 +52,6 @@ Notes:
 
 ```{r}
 
-DDATA <- here::here("data")
 cnames <- c(
   "opcert_2023",
   "hosp_2023",
@@ -61,7 +66,28 @@ regions <- read_excel(
   col_names = cnames,
   col_types = "text",
   skip = 2
-)
+) |>
+  mutate(across(where(is.character), ~ na_if(.x, "NA")))
 glimpse(regions)
+skim(regions)
+
+```
+
+### Examine region codes
+```{r}
+#| label: examine-regions
+#| output: true
+
+# notes
+regions |>
+  filter(!is.na(note))
+
+# missing values
+regions |>
+  filter(if_any(c(opcert_2023, hosp_2023, opcert_2024, hosp_2024), is.na))
+
+# different  values for 2023 and 2024
+regions |>
+  filter(opcert_2023 != opcert_2024 | hosp_2023 != hosp_2024)
 
 ```
