@@ -42,6 +42,8 @@ Notes:
 
 ![](images/paste-1.png)
 
+-   Additionally...
+
 ```{r}
 
 DDATA <- here::here("data")
