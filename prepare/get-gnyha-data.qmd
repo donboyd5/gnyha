@@ -169,12 +169,13 @@ skim(wages1)
 ```{r}
 #| output: true
 
-wages2 <- wages |>
+wages2 <- wages1 |>
   mutate(year = as.integer(year), line = as.integer(line)) |>
   mutate(across(c(fte:avghourly), as.numeric))
 
 skim(wages2)
 
+# Totals by occupation, sorted
 wages2 |>
   summarise(
     tothours = sum(tothours, na.rm = TRUE),
@@ -188,14 +189,26 @@ wages2 |>
     paypct = payroll / payroll[line == 40]
   )
 
+# sum of details by institution compared to totals
 wages2 |>
+  mutate(group = ifelse(line == 40, "total", "detail")) |>
   summarise(
     tothours = sum(tothours, na.rm = TRUE),
+    payroll = sum(payroll, na.rm = TRUE),
+    .by = c(year, opcert, hosp, group)
+  ) |>
+  pivot_longer(c(tothours, payroll)) |>
+  pivot_wider(names_from = group) |>
+  mutate(diff = detail - total, pdiff = diff / total) |>
+  arrange(desc(abs(pdiff)))
+
+# industry total payroll by occupation
+wages2 |>
+  summarise(
+    payroll = sum(payroll, na.rm = TRUE),
     .by = c(year, line, title)
   ) |>
-  filter(year == 2024) |>
-  mutate(
-    sumhours =sum(tothours[line != 40]
-  )
+  pivot_wider(names_from = year, values_from = payroll) |> 
+  arrange(desc(`2024`))
 
 ```
