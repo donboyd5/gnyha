@@ -10,7 +10,7 @@ editor:
 #| label: setup
 
 # library(conflicted)
-detach("package:conflicted", unload = TRUE)
+# detach("package:conflicted", unload = TRUE)
 source("important_libraries.R")
 # https://duckplyr.tidyverse.org/
 library(dbplyr)
@@ -25,6 +25,40 @@ library(duckplyr)
 DACS <- r"(D:\data\acs\5year\2023)"
 
 ```
+
+
+```{r}
+#| label: ONETIME-get-save-hus
+#| eval: false
+
+zfn <- "csv_hus.zip" # has a, b, c, d e.g., c is psam_pusc.csv
+zpath <- fs::path(DACS, zfn)
+zpath
+
+fnames <- unzip(zpath, list = TRUE)$Name |> str_subset(".csv")
+connections <- purrr::map(fnames, \(x) unz(zpath, x))
+df <- vroom(connections, id = "fname")
+count(df, fname)
+
+df2 <- df |>
+  rename_with(str_to_lower) |>
+  mutate(fname = str_replace(fname, ".*:", ""))
+count(df2, fname)
+
+path_duckdb <- fs::path(DACS, "acs.duckdb")
+acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
+DBI::dbListTables(acsdb)
+DBI::dbWriteTable(acsdb, "hus_5year2023", df2)
+DBI::dbListTables(acsdb)
+DBI::dbDisconnect(acsdb)
+
+path_duckdb <- fs::path(DACS, "acs.duckdb")
+acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
+DBI::dbListTables(acsdb)
+DBI::dbDisconnect(acsdb)
+
+```
+
 
 ```{r}
 #| label: ONETIME-get-save-pus
@@ -47,7 +81,7 @@ count(df2, fname)
 acsdb <- DBI::dbConnect(RSQLite::SQLite(), fs::path(DACS, "acs.sqlite"))
 DBI::dbWriteTable(acsdb, "pus", df2)
 DBI::dbListTables(acsdb)
-DBI::dbExecute(acsdb, "ALTER TABLE pus RENAME TO pus_5year2023;")
+# DBI::dbExecute(acsdb, "ALTER TABLE pus RENAME TO pus_5year2023;")
 DBI::dbDisconnect(acsdb)
 
 path_duckdb <- fs::path(DACS, "acs.duckdb")
@@ -55,10 +89,10 @@ con <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
 DBI::dbWriteTable(con, "pus_5year2023", df2)
 DBI::dbDisconnect(con)
 
-con <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
-DBI::dbListTables(con)
-DBI::dbExecute(con, "ALTER TABLE data RENAME TO pus_5year2023;")
-DBI::dbDisconnect(con)
+# con <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
+# DBI::dbListTables(con)
+# DBI::dbExecute(con, "ALTER TABLE data RENAME TO pus_5year2023;")
+# DBI::dbDisconnect(con)
 
 # renamed original files from Martin from td15.zip to td15_pw.zip (for password, etc.)
 # gzpre <- "td"
