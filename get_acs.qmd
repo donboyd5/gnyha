@@ -134,4 +134,12 @@ tmp |>
   scale_x_continuous(breaks = seq(0, 100, 5)) +
   ggtitle("Weighted number of nurses in NY by age")
 
+tmp |>
+  dplyr::summarize(wtdn = sum(pwgtp), .by = agep) |>
+  arrange(agep) |>
+  mutate(pct = wtdn / sum(wtdn)) |>
+  mutate(cumpct = cumsum(pct)) |>
+  janitor::adorn_totals() |>
+  kable()
+
 ```
