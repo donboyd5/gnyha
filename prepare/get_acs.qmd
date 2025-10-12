@@ -8,7 +8,8 @@ editor:
 
 ```{r}
 #| label: setup
-e.print_min = tprint)
+tprint <- 50 # default tibble print
+options(tibble.print_max = tprint, tibble.print_min = tprint)
 
 library(rlang)
 library(here)
