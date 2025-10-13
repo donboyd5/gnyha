@@ -47,7 +47,10 @@ library(RSQLite)
 
 ```{r}
 
-# C:\Users\Don-business\AppData\Local\Programs\Python\Python313\Scripts\tc.exe
+# test.csv
+# RECID,MARS,XTOT,EIC,e00200,e00200p,e00200s,p23250,e18400,e19800,s006
+# 1,       2,   3,  1, 40000,  40000,      0,     0,  3000,  4000, 1e7
+# 2,       2,   3,  1,200000, 200000,      0,     0, 15000, 20000, 1e7
 
 cmd1 <- "C:/Users/Don-business/AppData/Local/Programs/Python/Python313/Scripts/tc.exe"
 args <- c(
@@ -65,24 +68,40 @@ args <- c(
   "--dumpvars",
   "ALL"
 )
+args <- c(
+  shQuote("test.csv"),
+  "2024",
+  "--numyears", # creates a separate dump file for each year
+  "4", # total number of years including the first year
+  "--dumpdb",
+  "--dumpvars",
+  "ALL"
+)
 outdir <- "D:/R_projects/gnyha/data/tc_data/"
 oldwd <- getwd()
 setwd(outdir) # Go to target directory
 system2(cmd1, args) # , stdout = "output.txt"
 setwd(oldwd)
 
-tcdb <- DBI::dbConnect(RSQLite::SQLite(dbname="D:/R_projects/gnyha/data/tc_data/test-22-#-#-#.dumpdb"))
+tcdb <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  # "D:/R_projects/gnyha/data/tc_data/test-25-#-#-#.dumpdb"
+  "D:/R_projects/gnyha/data/tc_data/test-27-#-#-#.dumpdb"
+)
 DBI::dbListTables(tcdb)
+basedf <- dbReadTable(tcdb, "base")
+bldf <- dbReadTable(tcdb, "baseline")
+refdf <- dbReadTable(tcdb, "reform")
+DBI::dbDisconnect(tcdb)
 
 
-# args <- c(
-#   shQuote("E:/data/taxdata-psl/scratch/stack.csv"),
-#   "202",
-#   "--dump",
-#   "--outdir",
-#   "E:/data/taxdata-psl/scratch/"
-# )
-# system2(cmd1, args)
+# test.csv input vars
+# RECID,MARS,XTOT,EIC,e00200,e00200p,e00200s,p23250,e18400,e19800,s006
+
+ns(basedf) # has RECID, MARS, XTOT, s006
+ns(bldf) # has input vars other than MARS, XTOT, s006
+ns(refdf) # same as bldf
+glimpse(bldf)
 
 # tc tmd.csv 2022 --numyears 14 --exact --tables --runid 21
 
