@@ -1,0 +1,102 @@
+---
+editor_options: 
+  chunk_output_type: console
+editor:
+  markdown:
+    canonical: true  
+---
+
+# Call tc-cli
+
+```{r}
+#| label: setup
+tprint <- 50 # default tibble print
+options(tibble.print_max = tprint, tibble.print_min = tprint)
+
+library(rlang)
+library(here)
+library(rprojroot)
+library(this.path)
+# library(lintr)
+# library(styler)
+library(btools)
+
+library(tidyverse)
+library(dplyr) # dplyr functions included with tidyverse, only if specifically loaded elsewhere
+# remotes::install_github("JanMarvin/openxlsx2")
+library(openxlsx2) # for writing xlsx files
+library(readxl)
+library(vroom)
+library(fs)
+library(skimr)
+library(Hmisc)
+library(lubridate)
+library(formattable)
+library(janitor)
+library(vtable)
+library(quarto)
+
+# https://duckplyr.tidyverse.org/
+library(dbplyr)
+library(DBI)
+library(duckplyr)
+library(RSQLite)
+
+```
+
+
+```{r}
+
+# C:\Users\Don-business\AppData\Local\Programs\Python\Python313\Scripts\tc.exe
+
+cmd1 <- "C:/Users/Don-business/AppData/Local/Programs/Python/Python313/Scripts/tc.exe"
+args <- c(
+  shQuote(
+    "--test"
+  )
+)
+system2(cmd1, args)
+
+cmd1 <- "tc.exe"
+args <- c(
+  shQuote("test.csv"),
+  "2022",
+  "--dumpdb",
+  "--dumpvars",
+  "ALL"
+)
+outdir <- "D:/R_projects/gnyha/data/tc_data/"
+oldwd <- getwd()
+setwd(outdir) # Go to target directory
+system2(cmd1, args) # , stdout = "output.txt"
+setwd(oldwd)
+
+tcdb <- DBI::dbConnect(RSQLite::SQLite(dbname="D:/R_projects/gnyha/data/tc_data/test-22-#-#-#.dumpdb"))
+DBI::dbListTables(tcdb)
+
+
+# args <- c(
+#   shQuote("E:/data/taxdata-psl/scratch/stack.csv"),
+#   "202",
+#   "--dump",
+#   "--outdir",
+#   "E:/data/taxdata-psl/scratch/"
+# )
+# system2(cmd1, args)
+
+# tc tmd.csv 2022 --numyears 14 --exact --tables --runid 21
+
+```
+
+
+```{r}
+#| label: locations
+
+DACS5 <- r"(D:\data\acs\5year)"
+DACS52023 <- fs::path(DACS5, "2023")
+ACSDB <- "acs5year.duckdb"
+path_duckdb <- fs::path(DACS5, ACSDB)
+
+```
+
+
