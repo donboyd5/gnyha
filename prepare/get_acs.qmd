@@ -76,7 +76,7 @@ df |>
   explain()
 
 nyacs <- df |>
-  dplyr::filter(state == "36")
+  dplyr::filter(state == 36)
 explain(nyacs)
 soccodes <- count(nyacs, socp, sort = TRUE) |>
   as_duckdb_tibble() |>
@@ -87,15 +87,8 @@ nurses <- nyacs |>
   as_tibble()
 
 tmp <- nurses |> dplyr::filter(socp == "291141") |> select(-c(pwgtp1:pwgtp80))
-library(btools)
 ns(tmp)
 count(tmp, agep)
-
-tmp |>
-  count(agep) |>
-  ggplot(aes(agep, n)) +
-  geom_point() +
-  scale_x_continuous(breaks = seq(0, 100, 5))
 
 tmp |>
   dplyr::summarize(wtdn = sum(pwgtp), .by = agep) |>
