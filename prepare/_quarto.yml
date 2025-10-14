@@ -7,6 +7,7 @@ format:
   html:
     theme: cosmo
     code-fold: true
+    code-tools: true    
     number-depth: 5
     toc-depth: 5
     toc-expand: true
@@ -15,6 +16,10 @@ format:
 
 editor_options:
   chunk_output_type: console
+
+editor:
+  markdown:
+    canonical: true  
 
 execute:
   eval: true
@@ -31,7 +36,8 @@ book:
     collapse-level: 1
   chapters:
     - index.qmd
-    - get-gnyha-data.qmd
+    - get_acs.qmd
+    - get_gnyha_data.qmd
     # - steps.qmd
     # - part: "Extract Data"
     #   chapters:
