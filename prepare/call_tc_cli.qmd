@@ -159,11 +159,14 @@ hhdf1 |>
   filter(RECID == recn) |>
   # calc saltsum because it is not shown if the person takes standard
   mutate(saltsum = e18400 + e18500) |> #  + e18800???
+  mutate(dedused1 = pmax(standard, c04470), dedused2 = c00100 - c04800) |>
   select(
     RECID,
     year,
     FLPDYR,
     c00100,
+    dedused1,
+    dedused2,
     standard,
     idavail = c21060,
     idphased = c04470,
@@ -179,7 +182,7 @@ hhdf1 |>
 hhdf1 |>
   filter(RECID == recn) |>
   ggplot(aes(year, iitax)) +
-  geom_col(fill="blue") +
+  geom_col(fill = "blue") +
   theme_bw()
 
 
