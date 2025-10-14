@@ -1,11 +1,28 @@
 ---
-title: "GNYHA report"
+project:
+  type: default
+  title: "GNYHA report"
+  
 format:
   typst:
     toc: true
+    toc-depth: 4
+    number-sections: true
+    # number-depth: 4
     section-numbering: 1.1.a
-    columns: 2
     keep-typ: true
+    papersize: us-letter
+    margin:
+      x: 1.25in
+      y: 1.25in
+    columns: 2
+    output-dir: _report2
+    fontsize: 12pt
+    logo:
+      width: 3in
+      location: center-top
+      padding-top: 0.25in
+#    template: "templates/templates.typ"
 ---
 
 <!-- format:
@@ -24,9 +41,25 @@ some text
 
 ## Now another section
 
-more text
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
+
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
+Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+
 
 ### Another subsection
+
+#### Deeper subsection
 
 then back up to level 2
 
