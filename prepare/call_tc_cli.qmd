@@ -93,7 +93,7 @@ write_csv(df, "data/tc_data/hholds.csv")
 ```{r}
 #| label: run-tc-cli
 
-f <- function(fname) {
+run_tc <- function(fname) {
   cmd1 <- "tc.exe"
   args <- c(
     shQuote(fname),
@@ -111,7 +111,7 @@ f <- function(fname) {
   setwd(oldwd)
 }
 
-f("hholds.csv")
+run_tc("hholds.csv")
 
 ```
 
@@ -120,110 +120,73 @@ f("hholds.csv")
 
 # hholds-24-#-#-#.dumpdb
 
-f2 <- function(year) {
+get_tcout <- function(year) {
   y2 <- str_sub(as.character(year), 3, 4)
   fname <- paste0("hholds-", y2, "-#-#-#.dumpdb")
   print(fname)
   fpath <- paste0("D:/R_projects/gnyha/data/tc_data/", fname)
   tcdb <- DBI::dbConnect(
     RSQLite::SQLite(),
-    # "D:/R_projects/gnyha/data/tc_data/test-25-#-#-#.dumpdb"
     fpath
   )
-  print(DBI::dbListTables(tcdb))
+  basedf <- dbReadTable(tcdb, "base")
+  baseline <- dbReadTable(tcdb, "baseline")
   DBI::dbDisconnect(tcdb)
+
+  full <- basedf |>
+    select(RECID, MARS, XTOT, s006) |>
+    left_join(baseline, by = join_by(RECID)) |>
+    mutate(year = {
+      year
+    }) |>
+    relocate(year, .after = RECID)
+  full
 }
 
-purrr::walk(2024:2027, f2)
+hhdf1 <- purrr::map(2024:2027, get_tcout) |>
+  list_rbind()
+glimpse(hhdf1)
+count(hhdf1, year)
+ns(hhdf1)
 
+hhbase <- read_csv("data/tc_data/hholds.csv")
+hhbase
+hhbase |> filter(RECID == 12)
+# e19800 is itemizable charitable giving
 
-tcdb <- DBI::dbConnect(
-  RSQLite::SQLite(),
-  # "D:/R_projects/gnyha/data/tc_data/test-25-#-#-#.dumpdb"
-  "D:/R_projects/gnyha/data/tc_data/test-27-#-#-#.dumpdb"
-)
-DBI::dbListTables(tcdb)
-basedf <- dbReadTable(tcdb, "base")
-bldf <- dbReadTable(tcdb, "baseline")
-refdf <- dbReadTable(tcdb, "reform")
-DBI::dbDisconnect(tcdb)
+recn <- 87 # 74 is max agi; 28 is max iitax increase; 12 is max ddecrease
+hhdf1 |>
+  filter(RECID == recn) |>
+  # calc saltsum because it is not shown if the person takes standard
+  mutate(saltsum = e18400 + e18500) |> #  + e18800???
+  select(
+    RECID,
+    year,
+    FLPDYR,
+    c00100,
+    standard,
+    idavail = c21060,
+    idphased = c04470,
+    saltsum,
+    saltavail = c18300,
+    ti = c04800,
+    taxbc,
+    nonref = c07100,
+    refund,
+    iitax
+  )
 
+hhdf1 |>
+  filter(RECID == recn) |>
+  ggplot(aes(year, iitax)) +
+  geom_point()
 
-```
+hhdf1 |> filter(c00100 == max(c00100))
 
-```{r}
-
-# test.csv
-# RECID,MARS,XTOT,EIC,e00200,e00200p,e00200s,p23250,e18400,e19800,s006
-# 1,       2,   3,  1, 40000,  40000,      0,     0,  3000,  4000, 1e7
-# 2,       2,   3,  1,200000, 200000,      0,     0, 15000, 20000, 1e7
-
-# cmd1 <- "C:/Users/Don-business/AppData/Local/Programs/Python/Python313/Scripts/tc.exe"
-# args <- c(
-#   shQuote(
-#     "--test"
-#   )
-# )
-# system2(cmd1, args)
-
-# args <- c(
-#   shQuote("test.csv"),
-#   "2022",
-#   "--dumpdb",
-#   "--dumpvars",
-#   "ALL"
-# )
-
-cmd1 <- "tc.exe"
-
-args <- c(
-  shQuote("test.csv"),
-  "2024",
-  "--numyears", # creates a separate dump file for each year
-  "4", # total number of years including the first year
-  "--dumpdb",
-  "--dumpvars",
-  "ALL"
-)
-outdir <- "D:/R_projects/gnyha/data/tc_data/"
-oldwd <- getwd()
-setwd(outdir) # Go to target directory
-system2(cmd1, args) # , stdout = "output.txt"
-setwd(oldwd)
-
-tcdb <- DBI::dbConnect(
-  RSQLite::SQLite(),
-  # "D:/R_projects/gnyha/data/tc_data/test-25-#-#-#.dumpdb"
-  "D:/R_projects/gnyha/data/tc_data/test-27-#-#-#.dumpdb"
-)
-DBI::dbListTables(tcdb)
-basedf <- dbReadTable(tcdb, "base")
-bldf <- dbReadTable(tcdb, "baseline")
-refdf <- dbReadTable(tcdb, "reform")
-DBI::dbDisconnect(tcdb)
-
-
-# test.csv input vars
-# RECID,MARS,XTOT,EIC,e00200,e00200p,e00200s,p23250,e18400,e19800,s006
-
-ns(basedf) # has RECID, MARS, XTOT, s006
-ns(bldf) # has input vars other than MARS, XTOT, s006
-ns(refdf) # same as bldf
-glimpse(bldf)
-
-# tc tmd.csv 2022 --numyears 14 --exact --tables --runid 21
+hhdf1 |>
+  select(RECID, year, iitax) |>
+  pivot_wider(names_from = year, values_from = iitax) |>
+  mutate(diff = `2027` - `2024`) |>
+  filter(diff == min(diff))
 
 ```
-
-
-```{r}
-#| label: locations
-
-DACS5 <- r"(D:\data\acs\5year)"
-DACS52023 <- fs::path(DACS5, "2023")
-ACSDB <- "acs5year.duckdb"
-path_duckdb <- fs::path(DACS5, ACSDB)
-
-```
-
-
