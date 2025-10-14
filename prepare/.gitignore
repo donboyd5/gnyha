@@ -2,6 +2,7 @@
 
 /.quarto/
 **/*.quarto_ipynb
+**/_webpage/
 data/tc_data/
 management/
 
