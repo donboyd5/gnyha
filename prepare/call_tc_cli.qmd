@@ -44,6 +44,112 @@ library(RSQLite)
 
 ```
 
+```{r}
+#| label: create-test-data
+
+# make some data
+# df <- read_csv("data/tc_data/test.csv")
+set.seed(1234)
+nrecs <- 100
+df <- tibble(RECID = 1:nrecs) |>
+  mutate(
+    MARS = sample(2:3, size = nrecs, replace = TRUE),
+    e00200p = sample(seq(10e3, 100e3, 10e3), size = nrecs, replace = TRUE),
+    e00200s = sample(
+      c(0, 10e3, 20e3, 50e3),
+      size = nrecs,
+      replace = TRUE,
+      prob = c(.7, .1, .1, .1)
+    ),
+    e00200s = e00200s * (MARS == 2), # married joint
+    e00200 = e00200p + e00200s,
+    XTOT = sample(2:3, size = nrecs, replace = TRUE),
+    p23250 = sample(c(0, 20e3), size = nrecs, replace = TRUE, prob = c(.8, .2)),
+    e18400 = sample(
+      c(0, 5e3, 10e3, 20e3),
+      size = nrecs,
+      replace = TRUE,
+      prob = c(.7, .1, .1, .1)
+    ),
+    e19800 = sample(
+      c(0, 5e3, 10e3, 20e3),
+      size = nrecs,
+      replace = TRUE,
+      prob = c(.7, .1, .1, .1)
+    ),
+    s006 = 1
+  ) |>
+  relocate(e00200, .after = MARS)
+
+glimpse(df)
+ht(df)
+count(df, e00200)
+
+write_csv(df, "data/tc_data/hholds.csv")
+
+```
+
+
+```{r}
+#| label: run-tc-cli
+
+f <- function(fname) {
+  cmd1 <- "tc.exe"
+  args <- c(
+    shQuote(fname),
+    "2024",
+    "--numyears", # creates a separate dump file for each year
+    "4", # total number of years including the first year
+    "--dumpdb",
+    "--dumpvars",
+    "ALL"
+  )
+  outdir <- "D:/R_projects/gnyha/data/tc_data/"
+  oldwd <- getwd()
+  setwd(outdir) # Go to target directory
+  system2(cmd1, args) # , stdout = "output.txt"
+  setwd(oldwd)
+}
+
+f("hholds.csv")
+
+```
+
+```{r}
+#| label: get-results
+
+# hholds-24-#-#-#.dumpdb
+
+f2 <- function(year) {
+  y2 <- str_sub(as.character(year), 3, 4)
+  fname <- paste0("hholds-", y2, "-#-#-#.dumpdb")
+  print(fname)
+  fpath <- paste0("D:/R_projects/gnyha/data/tc_data/", fname)
+  tcdb <- DBI::dbConnect(
+    RSQLite::SQLite(),
+    # "D:/R_projects/gnyha/data/tc_data/test-25-#-#-#.dumpdb"
+    fpath
+  )
+  print(DBI::dbListTables(tcdb))
+  DBI::dbDisconnect(tcdb)
+}
+
+purrr::walk(2024:2027, f2)
+
+
+tcdb <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  # "D:/R_projects/gnyha/data/tc_data/test-25-#-#-#.dumpdb"
+  "D:/R_projects/gnyha/data/tc_data/test-27-#-#-#.dumpdb"
+)
+DBI::dbListTables(tcdb)
+basedf <- dbReadTable(tcdb, "base")
+bldf <- dbReadTable(tcdb, "baseline")
+refdf <- dbReadTable(tcdb, "reform")
+DBI::dbDisconnect(tcdb)
+
+
+```
 
 ```{r}
 
@@ -52,22 +158,24 @@ library(RSQLite)
 # 1,       2,   3,  1, 40000,  40000,      0,     0,  3000,  4000, 1e7
 # 2,       2,   3,  1,200000, 200000,      0,     0, 15000, 20000, 1e7
 
-cmd1 <- "C:/Users/Don-business/AppData/Local/Programs/Python/Python313/Scripts/tc.exe"
-args <- c(
-  shQuote(
-    "--test"
-  )
-)
-system2(cmd1, args)
+# cmd1 <- "C:/Users/Don-business/AppData/Local/Programs/Python/Python313/Scripts/tc.exe"
+# args <- c(
+#   shQuote(
+#     "--test"
+#   )
+# )
+# system2(cmd1, args)
+
+# args <- c(
+#   shQuote("test.csv"),
+#   "2022",
+#   "--dumpdb",
+#   "--dumpvars",
+#   "ALL"
+# )
 
 cmd1 <- "tc.exe"
-args <- c(
-  shQuote("test.csv"),
-  "2022",
-  "--dumpdb",
-  "--dumpvars",
-  "ALL"
-)
+
 args <- c(
   shQuote("test.csv"),
   "2024",
