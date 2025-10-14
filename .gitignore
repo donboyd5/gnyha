@@ -1,7 +1,12 @@
-
-**_webpage/
-**_report/
-
-*.typ
-
+# folders
+.quarto/
+_extensions/
+_freeze/
+_report/
+_webpage/
 data/tc_data/
+
+# filetypes to gitignore
+*.rmarkdown
+*.typ
+report/report.pdf
