@@ -7,4 +7,5 @@ data/tc_data/
 management/
 
 # filetypes to gitignore
+*.rmarkdown
 
