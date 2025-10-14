@@ -1,8 +1,5 @@
----
-project:
-  type: default
-  title: "GNYHA report"
-  
+--- 
+title: "GNYHA report"
 format:
   typst:
     toc: true
