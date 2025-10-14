@@ -22,18 +22,7 @@ format:
       width: 3in
       location: center-top
       padding-top: 0.25in
-#    template: "templates/templates.typ"
 ---
-
-<!-- format:
-  typst:
-    
-    author: "Don Boyd"
-    date: today
-    date-format: long      
-    toc: true
-    section-numbering: 1.1.a
-    columns: 2   -->
 
 # Introduction
 
