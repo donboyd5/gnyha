@@ -1,12 +1,4 @@
----
-editor_options: 
-  chunk_output_type: console
-editor:
-  markdown:
-    canonical: true  
----
-
-# Call tc-cli
+# Call tax-calculator command-line interface (tc-cli)
 
 ```{r}
 #| label: setup

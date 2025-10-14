@@ -2,10 +2,11 @@
 
 /.quarto/
 **/*.quarto_ipynb
-**/_webpage/
+
+_freeze/
+_webpage/
 data/tc_data/
 management/
 
 # filetypes to gitignore
 *.rmarkdown
-
