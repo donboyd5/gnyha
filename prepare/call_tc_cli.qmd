@@ -154,7 +154,7 @@ hhbase
 hhbase |> filter(RECID == 12)
 # e19800 is itemizable charitable giving
 
-recn <- 87 # 74 is max agi; 28 is max iitax increase; 12 is max ddecrease
+recn <- 12 # 74 is max agi; 28 is max iitax increase; 12 is max ddecrease
 hhdf1 |>
   filter(RECID == recn) |>
   # calc saltsum because it is not shown if the person takes standard
@@ -179,7 +179,9 @@ hhdf1 |>
 hhdf1 |>
   filter(RECID == recn) |>
   ggplot(aes(year, iitax)) +
-  geom_point()
+  geom_col(fill="blue") +
+  theme_bw()
+
 
 hhdf1 |> filter(c00100 == max(c00100))
 
