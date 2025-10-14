@@ -45,6 +45,13 @@ library(RSQLite)
 ```
 
 ```{r}
+
+GROOT <- rprojroot::find_root(rprojroot::has_file(".git/index"))
+DDATA <- fs::path(GROOT, "data")
+
+```
+
+```{r}
 #| label: create-test-data
 
 # make some data
@@ -85,7 +92,7 @@ glimpse(df)
 ht(df)
 count(df, e00200)
 
-write_csv(df, "data/tc_data/hholds.csv")
+write_csv(df, fs::path(DDATA, "tc_data/hholds.csv"))
 
 ```
 
@@ -149,7 +156,7 @@ glimpse(hhdf1)
 count(hhdf1, year)
 ns(hhdf1)
 
-hhbase <- read_csv("data/tc_data/hholds.csv")
+hhbase <- read_csv(fs::path(DDATA, "tc_data/hholds.csv"))
 hhbase
 hhbase |> filter(RECID == 12)
 # e19800 is itemizable charitable giving

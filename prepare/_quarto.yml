@@ -38,6 +38,7 @@ book:
     - index.qmd
     - get_acs.qmd
     - get_gnyha_data.qmd
+    - call_tc_cli.qmd
     # - steps.qmd
     # - part: "Extract Data"
     #   chapters:
