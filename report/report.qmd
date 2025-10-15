@@ -3,6 +3,7 @@
 ```{=typst}
 #title-page(
   [The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York],
+  [Prepared for the Greater New York Hospital Association],
   [Don Boyd],
   [Boyd Research, LLC]
 )

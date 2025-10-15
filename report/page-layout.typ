@@ -19,16 +19,19 @@
 )
 
 // Title page template
-#let title-page(doc-title, doc-author, doc-affiliation) = {
+#let title-page(doc-title, doc-subtitle, doc-author, doc-affiliation) = {
   set page(columns: 1)
   set text(size: 20pt, weight: "bold")
   align(center)[#doc-title]
+  
+  v(0.3em)
+  set text(size: 16pt, weight: "regular")  // Subtitle styling
+  align(center)[#doc-subtitle]
   
   v(0.5em)
   set text(size: 18pt, weight: "regular")
   align(center)[#doc-author]
   
-  // Removed v() spacing here - author and affiliation will be adjacent
   set text(size: 14pt, weight: "regular")
   align(center)[#doc-affiliation]
   
