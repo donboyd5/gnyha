@@ -1,4 +1,5 @@
 <!-- report.qmd -->
+
 ```{=typst}
 #title-page(
   [The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York],
@@ -19,17 +20,66 @@ Representative households should be consistent with wage and other data on hospi
 
 Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
 
-
 Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
 
 Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
 
 Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
 
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+## Some tables
 
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
+```{r}
+#| label: setup
+#| output: false
 
+library(tinytable)
+
+
+```
+
+Here are some tables
+
+```{r}
+#| label: tables
+#| output: true
+
+# head(mtcars)
+# print(head(mtcars))
+# tt(head(mtcars))
+# print(tt(head(mtcars)), format = "typst")
+
+tt(head(mtcars)) |>
+  format_tt(markdown = TRUE) # Helps with Typst conversion
+
+# print(tab, format = "typst")
+
+# format_tt(
+#   tab,
+#   digits = 2,
+#   num_mark_dec = ",",
+#   num_mark_big = " ",
+#   output = "typst"
+# )
+
+```
+## Here is a full 2-column table
+
+```{=typst}
+#set page(columns: 1)
+```
+```{r}
+#| label: wide-table
+#| echo: false
+
+tt(tail(mtcars)) |>
+  format_tt(markdown = TRUE)  # Use 90% of full page width
+```
+
+```{=typst}
+#set page(columns: 2)
+```
+
+## Back to main text
 
 ### Another subsection
 

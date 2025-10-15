@@ -13,8 +13,8 @@ editor_options:
 
 execute:
   eval: true
-  echo: true
-  output: false
+  echo: false
+  output: true
   freeze: false
 
 format:
