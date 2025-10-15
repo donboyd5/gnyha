@@ -1,6 +1,5 @@
 <!-- report.qmd -->
 
-
 # Introduction
 
 some text

@@ -1,7 +1,8 @@
 # _quarto.yml
+# _quarto.yml
 project:
   type: manuscript
-  execute-dir: project  # quarto should look to the project root
+  execute-dir: project
   output-dir: _output
 
 title: "The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York"
@@ -21,26 +22,24 @@ execute:
   eval: true
   echo: true
   output: false
-  freeze: false  # auto: during global project renders, re-render only when source changes
+  freeze: false
 
 format:
   typst:
-    toc: true
+    toc: false  # We'll create custom TOC
     toc-title: Contents
     toc-depth: 3
     number-sections: true
     section-numbering: 1.1.a
-    # number-depth: 4    
     keep-typ: true
     papersize: us-letter
     margin:
       x: 1.25in
       y: 1.25in
-    columns: 2
+    columns: 1  # Default to single column
     fontsize: 12pt
     include-in-header: page-layout.typ
     logo:
       width: 3in
       location: center-bottom
       padding-bottom: 0.15in
-      
