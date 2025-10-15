@@ -11,6 +11,6 @@ data/tc_data/
 # filetypes to gitignore
 *.html
 *.rmarkdown
-*.typ
-report/report.pdf
 report/.gitignore
+report/report.pdf
+report/report.typ
