@@ -25,8 +25,7 @@
   align(center)[#doc-title]
   
   v(0.3em)
-  set text(size: 16pt, weight: "regular")  // Subtitle styling
-  align(center)[#doc-subtitle]
+  align(center)[#text(size: 16pt, weight: "regular", style: "italic")[#doc-subtitle]] // Subtitle styling
   
   v(0.5em)
   set text(size: 18pt, weight: "regular")
