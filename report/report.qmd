@@ -84,4 +84,6 @@ and another table here
 #set page(columns: 1)
 ```
 
-## References
+```{=typst}
+#bibliography("references.bib", title: "References", style: "apa", full: true)
+```

@@ -19,6 +19,7 @@ execute:
 
 format:
   typst:
+    citeproc: false 
     toc: false  # We'll create custom TOC
     toc-title: Contents
     toc-depth: 3
