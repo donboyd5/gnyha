@@ -4,6 +4,13 @@ project:
   execute-dir: project  # quarto should look to the project root
   output-dir: _output
 
+title: "The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York"
+author:
+  - name: Don Boyd
+    affiliations:
+      - name: Boyd Research, LLC
+        department: Principal
+
 manuscript:
   article: report.qmd    
 
@@ -15,3 +22,25 @@ execute:
   echo: true
   output: false
   freeze: false  # auto: during global project renders, re-render only when source changes
+
+format:
+  typst:
+    toc: true
+    toc-title: Contents
+    toc-depth: 3
+    number-sections: true
+    section-numbering: 1.1.a
+    # number-depth: 4    
+    keep-typ: true
+    papersize: us-letter
+    margin:
+      x: 1.25in
+      y: 1.25in
+    columns: 2
+    fontsize: 12pt
+    include-in-header: page-layout.typ
+    logo:
+      width: 3in
+      location: center-bottom
+      padding-bottom: 0.15in
+      
