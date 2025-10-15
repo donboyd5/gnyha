@@ -1,9 +1,0 @@
-# folders to gitignore
-
-/.quarto/
-**/*.quarto_ipynb
-data/tc_data/
-management/
-
-# filetypes to gitignore
-

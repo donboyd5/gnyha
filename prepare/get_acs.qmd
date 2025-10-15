@@ -1,13 +1,10 @@
----
-editor_options: 
-  chunk_output_type: console
-editor:
-  markdown:
-    canonical: true  
----
+# Get American Community Survey data
+
+Get and save the data we need from the ACS
 
 ```{r}
 #| label: setup
+
 tprint <- 50 # default tibble print
 options(tibble.print_max = tprint, tibble.print_min = tprint)
 
@@ -53,20 +50,47 @@ path_duckdb <- fs::path(DACS5, ACSDB)
 
 
 ```{r}
+#| label: show-tables
+#| output: true
+
 acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
 DBI::dbListTables(acsdb)
-# DBI::dbDisconnect(acsdb)
+DBI::dbDisconnect(acsdb)
+
 ```
 
 ```{r}
-#| label: examine
+#| label: test
+#| show: true
 
+acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
 df <- tbl(acsdb, "pus_5year2023")
-df
 
+print(df) # needed if rendering from terminal
+
+```
+
+```{r}
+DBI::dbDisconnect(acsdb)
+```
+
+```{r}
+#| echo: false
+knitr::knit_exit()
+```
+
+
+```{r}
+#| label: examine
+#| show: true
+#| eval: false
+
+acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
+df <- tbl(acsdb, "pus_5year2023")
+
+df
 df |>
   explain()
-
 count(df, fname)
 colnames(df) |> sort()
 glimpse(df)
@@ -104,5 +128,7 @@ tmp |>
   mutate(cumpct = cumsum(pct)) |>
   janitor::adorn_totals() |>
   kable()
+
+DBI::dbDisconnect(acsdb)
 
 ```

@@ -1,26 +1,12 @@
+# _quarto.yml
+# _quarto.yml
 project:
-  type: default
-  execute-dir: project  # quarto should look to the project root (pendata)  
-  output-dir: _report
+  type: manuscript
+  execute-dir: project
+  output-dir: _output
 
-# format:
-#   typst:
-#     title: "GNYHA report"
-#     author: "Don Boyd"
-#     date: today
-#     date-format: long      
-#     toc: true
-#     section-numbering: 1.1.a
-#     columns: 2  
-
-# format:
-#   html:
-#     theme: cosmo
-#     code-fold: true
-#     number-depth: 5
-#     toc-depth: 5
-#     toc-expand: true
-#     collapse-level: 1
+manuscript:
+  article: report.qmd    
 
 editor_options:
   chunk_output_type: console
@@ -29,12 +15,25 @@ execute:
   eval: true
   echo: true
   output: false
-  freeze: false  # auto: during global project renders, re-render only when source changes
+  freeze: false
 
-# book:
-#   title: "GNYHA report"
-#   author: "Don Boyd"
-#   date: today
-#   date-format: long
-#   sidebar:
-#     collapse-level: 1
+format:
+  typst:
+    citeproc: false 
+    toc: false  # We'll create custom TOC
+    toc-title: Contents
+    toc-depth: 3
+    number-sections: true
+    section-numbering: 1.1.a
+    keep-typ: true
+    papersize: us-letter
+    margin:
+      x: 1.25in
+      y: 1.25in
+    columns: 1  # Back to 1 as default
+    fontsize: 12pt
+    include-in-header: page-layout.typ
+    logo:
+      width: 3in
+      location: center-bottom
+      padding-bottom: 0.15in

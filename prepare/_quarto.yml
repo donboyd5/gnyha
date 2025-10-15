@@ -7,6 +7,7 @@ format:
   html:
     theme: cosmo
     code-fold: true
+    code-tools: true    
     number-depth: 5
     toc-depth: 5
     toc-expand: true
@@ -16,11 +17,15 @@ format:
 editor_options:
   chunk_output_type: console
 
+editor:
+  markdown:
+    canonical: true  
+
 execute:
   eval: true
   echo: true
   output: false
-  freeze: false  # auto: during global project renders, re-render only when source changes
+  freeze: auto  # auto: during global project renders, re-render only when source changes
 
 book:
   title: "GNYHA preparation"
@@ -31,7 +36,9 @@ book:
     collapse-level: 1
   chapters:
     - index.qmd
-    - get-gnyha-data.qmd
+    - get_acs.qmd
+    - get_gnyha_data.qmd
+    - call_tc_cli.qmd
     # - steps.qmd
     # - part: "Extract Data"
     #   chapters:
@@ -81,3 +88,13 @@ book:
     #     - make_params.qmd
 
 # GROOT <- rprojroot::find_root(rprojroot::has_file(".git/index"))
+
+# possible yaml at top of files
+
+# ---
+# editor_options: 
+#   chunk_output_type: console
+# editor:
+#   markdown:
+#     canonical: true  
+# ---
