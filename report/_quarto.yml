@@ -5,13 +5,6 @@ project:
   execute-dir: project
   output-dir: _output
 
-title: "The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York"
-author:
-  - name: Don Boyd
-    affiliations:
-      - name: Boyd Research, LLC
-        department: Principal
-
 manuscript:
   article: report.qmd    
 
