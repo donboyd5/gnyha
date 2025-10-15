@@ -1,3 +1,4 @@
+# _quarto.yml
 project:
   type: manuscript
   execute-dir: project  # quarto should look to the project root

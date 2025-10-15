@@ -1,24 +1,32 @@
+<!-- report.qmd -->
 --- 
-title: "GNYHA report"
+title: "The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York"
+author: 
+  - name: Don Boyd
+    affiliations:
+      - name: Boyd Research, LLC
+        department: Principal
+
 format:
   typst:
     toc: true
-    toc-depth: 4
+    toc-title: Contents
+    toc-depth: 3
     number-sections: true
-    # number-depth: 4
     section-numbering: 1.1.a
+    # number-depth: 4    
     keep-typ: true
     papersize: us-letter
     margin:
       x: 1.25in
       y: 1.25in
     columns: 2
-    output-dir: _report2
     fontsize: 12pt
     logo:
       width: 3in
-      location: center-top
-      padding-top: 0.25in
+      location: center-bottom
+      padding-bottom: 0.15in
+
 ---
 
 # Introduction
@@ -83,3 +91,10 @@ and another table here
 )
 
 ```
+
+```{=typst}
+#colbreak()
+#bibliography("references.bib", full: true, style: "apa")
+```
+
+<!-- harvard-cite-them-right, ieee -->
