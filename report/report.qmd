@@ -80,6 +80,40 @@ tt(tail(mtcars)) |>
 #set page(columns: 2)
 ```
 
+## Now a landscape table
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+```
+
+
+```{r}
+#| echo: false
+
+tt(tail(mtcars)) |>
+  format_tt(markdown = TRUE) 
+
+```
+
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: false,
+  columns: 2
+)
+```
+
+<!-- Import a text table -->
+
+{{< include texttable.qmd >}}
+
+
+
 # Back to main text
 
 ## Another subsection

@@ -1,0 +1,97 @@
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+```
+
+# Important tax changes
+
+This is a text table using figure then table.
+
+```{=typst}
+
+// Define individual rows as variables
+#let row1 = (
+  [Column 1 text here with lots of detail about something important],
+  [Column 2 has even more text explaining complex concepts],
+  [Column 3 wraps up the row]
+)
+
+// #table(
+//   columns: 3,
+//   align: (left, center, right),
+//   table.header(
+//     [Header 1], [Header 2], [Header 3]
+//   ),
+//   ..row1,  // The .. unpacks the array
+//   ..row2,
+//   ..row3,
+// )
+
+
+// #table(
+//   columns: 3,
+//   align: (left, left, right),  // Default alignment for data cells
+  
+//   // Headers with their own alignment
+//   table.header(
+//     table.cell(align: center)[Header 1],  // Centered header
+//     table.cell(align: center)[Header 2],  // Centered header
+//     table.cell(align: center)[Header 3],  // Centered header
+//   ),
+  
+//   // Data cells use the default alignment (left, left, right)
+//   [Left-aligned data], [Left-aligned data], [Right-aligned data],
+//   [More left text], [More left text], [123.45],
+//   [Even more], [And more], [678.90],
+// )
+
+#let row1 = (
+  [Column 1 text here with lots of detail about something important],
+  [Column 2 has even more text explaining complex concepts],
+  [Column 3 wraps up the row]
+)
+
+#figure(
+  table(
+    columns: 6,
+    align: (left, center, right, right, right, left),           // Horizontal
+    table.cell(align: horizon)[Category],  // Vertical: top, horizon, bottom
+    table.cell(align: horizon)[2024 Law],
+    table.cell(align: horizon)[2025],
+    table.cell(align: horizon)[2026],
+    table.cell(align: horizon)[2027],
+    table.cell(align: horizon)[Implications for representative households],
+    // start the data cells
+    [Income calculation],[],[],[],[],[],
+    [Overtime pay],[No special treatment],[Deduct overtime premium (the "half" in time-and-a-half) up to \$25k married, \$12.5k single.],[],[],[],
+  )
+) 
+```
+
+<!-- #let a = table.cell(
+  fill: green.lighten(60%),
+)[A]
+#let b = table.cell(
+  fill: aqua.lighten(60%),
+)[B]
+
+#table(
+  columns: 4,
+  [], [Exam 1], [Exam 2], [Exam 3],
+
+  [John], [], a, [],
+  [Mary], [], a, a,
+  [Robert], b, a, b,
+) -->
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+```
