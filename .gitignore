@@ -1,6 +1,7 @@
 # folders
 .quarto/
 _extensions/
+*_files/
 _freeze/
 _output/
 _report/
@@ -8,6 +9,8 @@ _webpage/
 data/tc_data/
 
 # filetypes to gitignore
+*.html
 *.rmarkdown
 *.typ
 report/report.pdf
+report/.gitignore
