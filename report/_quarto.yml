@@ -36,7 +36,7 @@ format:
     margin:
       x: 1.25in
       y: 1.25in
-    columns: 1  # Default to single column
+    columns: 1  # Back to 1 as default
     fontsize: 12pt
     include-in-header: page-layout.typ
     logo:

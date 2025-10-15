@@ -1,4 +1,13 @@
 <!-- report.qmd -->
+```{=typst}
+#title-page(
+  [The Impact of Post-2024 Federal Income Tax Changes on Hospital Workers in New York],
+  [Don Boyd],
+  [Boyd Research, LLC]
+)
+#toc-page()
+#set page(columns: 2)
+```
 
 # Introduction
 
@@ -63,9 +72,16 @@ and another table here
 
 ```
 
-```{=typst}
+<!-- ```{=typst}
 #colbreak()
 #bibliography("references.bib", full: true, style: "apa")
-```
+``` -->
 
 <!-- harvard-cite-them-right, ieee -->
+
+```{=typst}
+#pagebreak()
+#set page(columns: 1)
+```
+
+## References
