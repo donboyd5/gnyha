@@ -19,3 +19,5 @@ prepare/.gitignore
 report/.gitignore
 report/report.pdf
 report/report.typ
+
+data/table.csv
