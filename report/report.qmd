@@ -27,14 +27,231 @@ Representative households should be consistent with wage and other data on hospi
 
 Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
 
-# Some tables
+# Representative households
+
 
 ```{r}
 #| label: setup
 #| output: false
 
-library(tinytable)
+GROOT <- rprojroot::find_root(rprojroot::has_file(".git/index"))
+# source(fs::path(GROOT, "R", "libraries.R"))
 
+tprint <- 75 # default tibble print
+options(tibble.print_max = tprint, tibble.print_min = tprint)
+
+libs <- function() {
+  library(tidyverse)
+  library(gt)
+  library(tinytable)
+  library(readxl)
+}
+
+libs()
+
+```
+
+
+```{r}
+#| label: get-tax-change-table-data
+
+fname <- "GNYHA report inputs.xlsx"
+fpath <- fs::path(GROOT, "data", fname)
+df <- read_excel(fpath, sheet = "tax changes", range = cell_cols("A:F"))
+
+df2 <- df |>
+  filter(row_number() > 3)
+
+df3 <- df2 |>
+  filter(!is.na(item), !is.na(y2024)) |>
+  select(-notes)
+
+attr(df3$item, "label") <- "Tax law provision"
+attr(df3$y2024, "label") <- "2024 actual"
+attr(df3$y2025, "label") <- "2025"
+attr(df3$y2026, "label") <- "2026"
+attr(df3$y2027, "label") <- "2027"
+
+df3 |> 
+  write_csv("data/table.csv", quote="all")
+
+
+```
+
+
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+```
+
+```{r}
+#| label: tax-changes-table
+#| output: true
+
+col1width <- .1
+colwidths <- c(col1width, rep((1 - col1width) / 4, 4))
+
+taxtable <- df3 |>
+  tt(
+    output = "typst",
+    escape = TRUE,
+    width = colwidths,
+    colnames = "label",
+    caption = "Important tax changes, relative to 2024 law, that will affect hospital workers"
+  ) |>
+  style_tt("caption", smallcap = TRUE, bold = TRUE, fontsize = 1.5) |>
+  style_tt("colnames", italic = TRUE, bold = TRUE) |>
+  style_tt(j = 1:5, align = "l") |>
+  format_tt(replace = TRUE) |>
+  group_tt(
+    j = list(
+      "Scheduled law" = 3:5
+    )
+  ) |>
+  style_tt(i = -1, j = 3:5, background = "grey95", bold = TRUE)
+
+fpath <- fs::path(GROOT, "report", "taxlaw_table.png")
+# save_tt(taxtable, output = fpath, overwrite = TRUE)
+# save_tt(taxtable, output = "taxlaw_table.pdf")
+
+```
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: false,
+  columns: 2
+)
+```
+
+
+```{r}
+
+taxtable2 <- df3 |>
+  gt() |>
+  # Caption
+  tab_header(
+    title = md(
+      "**Important tax changes, relative to 2024 law, that will affect hospital workers**"
+    )
+  ) |>
+  # Column spanner (group header)
+  tab_spanner(
+    label = "Scheduled law",
+    columns = 3:5
+  ) |>
+  # Style the title (caption)
+  tab_style(
+    style = list(
+      cell_text(
+        size = px(18), # Adjust size as needed (1.5x base)
+        weight = "bold",
+        transform = "capitalize" # smallcaps approximation
+      )
+    ),
+    locations = cells_title(groups = "title")
+  ) |>
+  # Style column names
+  tab_style(
+    style = cell_text(style = "italic", weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  # Align columns 1-5 left
+  cols_align(
+    align = "left",
+    columns = 1:5
+  ) |>
+  # Style columns 3-5 background and bold (all rows except header)
+  # tab_style(
+  #   style = list(
+  #     cell_fill(color = "grey95"),
+  #     cell_text(weight = "bold")
+  #   ),
+  #   locations = cells_body(columns = 3:5)
+  # ) |>
+  # Format missing values (if needed)
+  fmt_missing(
+    columns = everything(),
+    missing_text = ""
+  ) # |>
+# # Set column widths (adjust as needed)
+# cols_width(
+#   everything() ~ px(colwidths) # Or specify individually
+# )
+
+# taxtable2 # cannot display when we are rendering to typst!! font errors
+
+html_file <- tempfile(fileext = ".html")
+gtsave(taxtable2, html_file)
+
+# webshot2::webshot(
+#   url = html_file,
+#   file = "taxlaw_table2.pdf",
+#   vwidth = 2200, # viewport width (adjust to avoid wrapping)
+#   vheight = 4000, # tall enough to fit all rows
+#   cliprect = "viewport", # crop to viewport size (one page)
+#   zoom = 1
+# )
+
+webshot2::webshot(
+  url = html_file,
+  file = "taxlaw_table3.png",
+  vwidth = 2200,
+  vheight = 4000,
+  zoom = 2,
+  expand = 100
+)
+
+#image("table.png", width: 6in, fit: "none")
+
+```
+
+```{r}
+#| label: show
+#| output: true
+
+taxtable2
+
+df3
+
+```
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+
+
+#figure(
+  image("taxlaw_table3.png", width: 9in, fit: "cover")
+)
+
+// "cover", "contain", or "stretch" for fit: 
+
+#pagebreak()
+#set page(
+  flipped: false,
+  columns: 2
+)
+```
+
+```{r}
+#| echo: false
+knitr::knit_exit()
+```
+
+
+# Some tables
+
+```{r}
+#| label: setupx
+#| output: false
 
 ```
 
@@ -63,17 +280,19 @@ tt(head(mtcars)) |>
 # )
 
 ```
+
 ## Here is a full 2-column table
 
 ```{=typst}
 #set page(columns: 1)
 ```
+
 ```{r}
 #| label: wide-table
 #| echo: false
 
 tt(tail(mtcars)) |>
-  format_tt(markdown = TRUE)  # Use 90% of full page width
+  format_tt(markdown = TRUE) # Use 90% of full page width
 ```
 
 ```{=typst}
@@ -95,7 +314,7 @@ tt(tail(mtcars)) |>
 #| echo: false
 
 tt(tail(mtcars)) |>
-  format_tt(markdown = TRUE) 
+  format_tt(markdown = TRUE)
 
 ```
 
@@ -115,6 +334,7 @@ tt(tail(mtcars)) |>
 
 
 # Back to main text
+
 
 ## Another subsection
 
