@@ -1,5 +1,6 @@
-# folders
+# folders to gitignore
 .quarto/
+
 _extensions/
 *_files/
 _freeze/
@@ -9,8 +10,12 @@ _webpage/
 data/tc_data/
 
 # filetypes to gitignore
+~*
 *.html
 *.rmarkdown
+
+# specific files to gitignore
+prepare/.gitignore
 report/.gitignore
 report/report.pdf
 report/report.typ
