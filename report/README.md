@@ -1,6 +1,6 @@
-# Report
+# GNYHA Report Information
 
-Typst resources
+Typst resources:
 
 - https://github.com/mvuorre/quarto-preprint
 - https://www.youtube.com/watch?v=idgZjnDIS1s
