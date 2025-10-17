@@ -1,3 +1,11 @@
+---
+execute:
+  eval: true
+  echo: false
+  output: true
+  freeze: false
+---
+
 <!-- report.qmd -->
 
 ```{=typst}
@@ -11,23 +19,15 @@
 #set page(columns: 2)
 ```
 
+```{=typst}
+// #set paralign(left)
+#set par(linebreaks: "optimized")
+
+```
+
 # Introduction
 
-some text
-
-# Now another section
-
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
-
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
-
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
-
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
-
-Representative households should be consistent with wage and other data on hospital workers provided by the Greater New York Hospital Association, fleshed out to reflect the diversity of tax situations households are likely to face. For example, representative households should reflect, in realistic ways, different hospital occupations, family structures, regions of the state, home ownership or renting arrangements, spousal income levels, and other factors that influence, in important ways, how recent federal income tax changes will affect federal income taxes.
-
-# Representative households
+Important changes in federal income taxes are scheduled for 2025 and later years. This report examines the major changes and how they will affect representative hospital workers in New York, in the 2025, 2026, and 2027 tax years. It presents impacts relative to the 2024 tax year.
 
 
 ```{r}
@@ -51,9 +51,96 @@ libs()
 
 ```
 
+Comparisons are to 2024 law, NOT to otherwise scheduled law. For example, ...
+
+# Federal tax changes that will affect hospital workers
+
+This project considers all important changes in federal income taxes. The most significant changes were passed by Congress in [month, ]2025 in legislation officially called the One Big Beautiful Bill Act (OBBBA). Among other things, OBBBA:
+
+-  Extends tax reductions enacted in the Tax Cuts and Jobs Act of 2017 (TCJA) that had been scheduled to expire. While these have often been described as new tax reductions, they are largely continuations of existing law and for this report they are not treated as new reductions.
+-  Modified the itemized deduction for state and local taxes (SALT), which had been capped at $10,000 in the TCJA. The cap had been schedule to expire in [year] but OBBBA increased the cap to $40,000 and extended it through [year].
+-  Broadened and extended
+-  Made other changes to the standard deduction, certain tax credits, and other provisions.
+
+This section explains the major changes in OBBBA, and in other legislation as appropriate.
+
+Explain changes here
+
+Summary table in appendix.
+
+# Representative hospital workers
+
+How we design representative workers -- factors we need to consider (give example for each)
+
+-  Hospital-related wages
+-  Overtime income, if any
+-  Other income
+-  Income of spouse, if any, and other family members -- tax rates, tax brackets, eligibility for credits
+-  Family structure
+-  Region of the state - affects wages, different COLs; affects likelihood of owning a home, value of home, property taxes
+-  Number of children and their ages
+
+How we construct representative workers. Goal: realistic, but not overwhelming
+
+Listing / summary of representative workers:
+
+-  characteristics
+-  regions
+-  number of rep workers
+
+See appendix for full details.
+
+# How we calculate taxes
+
+ Assistance of the Policy Simulation Library’s Tax-Calculator model, a highly regarded model of the federal income tax -- [documentation](https://taxcalc.pslmodels.org/) and [code](https://github.com/PSLmodels/Tax-Calculator).
+
+ Explain why this is a high-quality approach.
+
+
+# Fake text to show how the report will look
+
+```{=typst}
+#lorem(80)
+#parbreak()
+// other spacing options: #v(1em) #v(2em) #space(height: 12pt)
+```
+
+```{=typst}
+#lorem(80)
+#parbreak()
+#lorem(80)
+#parbreak()
+
+// other spacing options: #v(1em) #v(2em) #space(height: 12pt)
+```
+
+# Conclusion
+
+```{=typst}
+#lorem(80)
+#parbreak()
+// other spacing options: #v(1em) #v(2em) #space(height: 12pt)
+```
+
+<!-- Place bibliography on new page after the conclusion. -->
+
+```{=typst}
+#pagebreak()
+#set page(columns: 1)
+#bibliography("references.bib", title: "References", style: "apa", full: true)
+```
+
+```{=typst}
+#pagebreak()
+```
+
+# Appendices
+
+## Representative households
 
 ```{r}
 #| label: get-tax-change-table-data
+#| eval: true
 
 fname <- "GNYHA report inputs.xlsx"
 fpath <- fs::path(GROOT, "data", fname)
@@ -72,13 +159,21 @@ attr(df3$y2025, "label") <- "2025"
 attr(df3$y2026, "label") <- "2026"
 attr(df3$y2027, "label") <- "2027"
 
-df3 |> 
-  write_csv("data/table.csv", quote="all")
+fpath <- fs::path(GROOT, "data", "table.csv")
 
+df3 |>
+  write_csv(fpath, quote = "all")
 
 ```
 
 
+```{r}
+#| echo: false
+knitr::knit_exit()
+```
+
+
+## Examples of typst techniques
 
 ```{=typst}
 #pagebreak()
@@ -241,6 +336,7 @@ df3
 )
 ```
 
+
 ```{r}
 #| echo: false
 knitr::knit_exit()
@@ -266,8 +362,8 @@ Here are some tables
 # tt(head(mtcars))
 # print(tt(head(mtcars)), format = "typst")
 
-tt(head(mtcars)) |>
-  format_tt(markdown = TRUE) # Helps with Typst conversion
+# tt(head(mtcars)) |>
+#   format_tt(markdown = TRUE) # Helps with Typst conversion
 
 # print(tab, format = "typst")
 
@@ -332,17 +428,7 @@ tt(tail(mtcars)) |>
 {{< include texttable.qmd >}}
 
 
-
-# Back to main text
-
-
-## Another subsection
-
-### Deeper subsection
-
-then back up to level 2
-
-## Another level 2Level 2
+## Another Level 2
 
 Put a table here
 

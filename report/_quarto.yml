@@ -11,12 +11,6 @@ manuscript:
 editor_options:
   chunk_output_type: console
 
-execute:
-  eval: true
-  echo: false
-  output: true
-  freeze: false
-
 format:
   typst:
     citeproc: false 
@@ -31,7 +25,7 @@ format:
       x: 1.25in
       y: 1.25in
     columns: 1  # Back to 1 as default
-    fontsize: 12pt
+    fontsize: 9pt
     include-in-header: page-layout.typ
     logo:
       width: 3in
