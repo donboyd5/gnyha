@@ -96,27 +96,6 @@ See appendix for full details.
 
  Explain why this is a high-quality approach.
 
-
-```{=typst}
-#pagebreak()
-#set page(
-  flipped: true,
-  columns: 1
-)
-```
-
-```{=typst}
-#include "taxchanges_table.typ"
-```
-
-```{=typst}
-#pagebreak()
-#set page(
-  flipped: false,
-  columns: 2
-)
-```
-
 # Results
 
 ```{=typst}
@@ -156,6 +135,28 @@ See appendix for full details.
 ```
 
 # Appendices
+
+## Tax changes
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+```
+
+```{=typst}
+#include "taxchanges_table.typ"
+```
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: false,
+  columns: 1
+)
+```
 
 ## Representative households
 
