@@ -97,6 +97,26 @@ See appendix for full details.
  Explain why this is a high-quality approach.
 
 
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: true,
+  columns: 1
+)
+```
+
+```{=typst}
+#include "taxchanges_table.typ"
+```
+
+```{=typst}
+#pagebreak()
+#set page(
+  flipped: false,
+  columns: 2
+)
+```
+
 # Results
 
 ```{=typst}
@@ -125,9 +145,10 @@ See appendix for full details.
 <!-- Place bibliography on new page after the conclusion. -->
 
 ```{=typst}
+// harvard-cite-them-right, ieee, apa
 #pagebreak()
 #set page(columns: 1)
-#bibliography("references.bib", title: "References", style: "apa", full: true)
+#bibliography("references.bib", title: "References", style: "harvard-cite-them-right", full: true)
 ```
 
 ```{=typst}
@@ -140,7 +161,7 @@ See appendix for full details.
 
 ```{r}
 #| label: get-tax-change-table-data
-#| eval: true
+#| eval: false
 
 fname <- "GNYHA report inputs.xlsx"
 fpath <- fs::path(GROOT, "data", fname)
@@ -221,260 +242,4 @@ fpath <- fs::path(GROOT, "report", "taxlaw_table.png")
   flipped: false,
   columns: 2
 )
-```
-
-
-```{r}
-
-taxtable2 <- df3 |>
-  gt() |>
-  # Caption
-  tab_header(
-    title = md(
-      "**Important tax changes, relative to 2024 law, that will affect hospital workers**"
-    )
-  ) |>
-  # Column spanner (group header)
-  tab_spanner(
-    label = "Scheduled law",
-    columns = 3:5
-  ) |>
-  # Style the title (caption)
-  tab_style(
-    style = list(
-      cell_text(
-        size = px(18), # Adjust size as needed (1.5x base)
-        weight = "bold",
-        transform = "capitalize" # smallcaps approximation
-      )
-    ),
-    locations = cells_title(groups = "title")
-  ) |>
-  # Style column names
-  tab_style(
-    style = cell_text(style = "italic", weight = "bold"),
-    locations = cells_column_labels()
-  ) |>
-  # Align columns 1-5 left
-  cols_align(
-    align = "left",
-    columns = 1:5
-  ) |>
-  # Style columns 3-5 background and bold (all rows except header)
-  # tab_style(
-  #   style = list(
-  #     cell_fill(color = "grey95"),
-  #     cell_text(weight = "bold")
-  #   ),
-  #   locations = cells_body(columns = 3:5)
-  # ) |>
-  # Format missing values (if needed)
-  fmt_missing(
-    columns = everything(),
-    missing_text = ""
-  ) # |>
-# # Set column widths (adjust as needed)
-# cols_width(
-#   everything() ~ px(colwidths) # Or specify individually
-# )
-
-# taxtable2 # cannot display when we are rendering to typst!! font errors
-
-html_file <- tempfile(fileext = ".html")
-gtsave(taxtable2, html_file)
-
-# webshot2::webshot(
-#   url = html_file,
-#   file = "taxlaw_table2.pdf",
-#   vwidth = 2200, # viewport width (adjust to avoid wrapping)
-#   vheight = 4000, # tall enough to fit all rows
-#   cliprect = "viewport", # crop to viewport size (one page)
-#   zoom = 1
-# )
-
-webshot2::webshot(
-  url = html_file,
-  file = "taxlaw_table3.png",
-  vwidth = 2200,
-  vheight = 4000,
-  zoom = 2,
-  expand = 100
-)
-
-#image("table.png", width: 6in, fit: "none")
-
-```
-
-```{r}
-#| label: show
-#| output: true
-
-taxtable2
-
-df3
-
-```
-
-```{=typst}
-#pagebreak()
-#set page(
-  flipped: true,
-  columns: 1
-)
-
-
-#figure(
-  image("taxlaw_table3.png", width: 9in, fit: "cover")
-)
-
-// "cover", "contain", or "stretch" for fit: 
-
-#pagebreak()
-#set page(
-  flipped: false,
-  columns: 2
-)
-```
-
-
-```{r}
-#| echo: false
-knitr::knit_exit()
-```
-
-
-# Some tables
-
-```{r}
-#| label: setupx
-#| output: false
-
-```
-
-Here are some tables
-
-```{r}
-#| label: tables
-#| output: true
-
-# head(mtcars)
-# print(head(mtcars))
-# tt(head(mtcars))
-# print(tt(head(mtcars)), format = "typst")
-
-# tt(head(mtcars)) |>
-#   format_tt(markdown = TRUE) # Helps with Typst conversion
-
-# print(tab, format = "typst")
-
-# format_tt(
-#   tab,
-#   digits = 2,
-#   num_mark_dec = ",",
-#   num_mark_big = " ",
-#   output = "typst"
-# )
-
-```
-
-## Here is a full 2-column table
-
-```{=typst}
-#set page(columns: 1)
-```
-
-```{r}
-#| label: wide-table
-#| echo: false
-
-tt(tail(mtcars)) |>
-  format_tt(markdown = TRUE) # Use 90% of full page width
-```
-
-```{=typst}
-#set page(columns: 2)
-```
-
-## Now a landscape table
-
-```{=typst}
-#pagebreak()
-#set page(
-  flipped: true,
-  columns: 1
-)
-```
-
-
-```{r}
-#| echo: false
-
-tt(tail(mtcars)) |>
-  format_tt(markdown = TRUE)
-
-```
-
-
-```{=typst}
-#pagebreak()
-#set page(
-  flipped: false,
-  columns: 2
-)
-```
-
-<!-- Import a text table -->
-
-{{< include texttable.qmd >}}
-
-
-## Another Level 2
-
-Put a table here
-
-```{=typst}
-#table(
-  columns: 4,
-  table.header[Col 1][Col 2][Col 3][Col 4],
-  [Row 1, Cell 1], [Row 1, Cell 2], [Row 1, Cell 3], [Row 1, Cell 4],
-  [Row 2, Cell 1], [Row 2, Cell 2], [Row 2, Cell 3], [Row 2, Cell 4],
-  // ... more rows of 4 cells
-)
-
-```
-
-and another table here
-
-```{=typst}
-#let row2 = ([Row 2, Cell 1. This row uses a variable for each cell.],
-             [Row 2, Cell 2. Edit as needed.],
-             [Row 2, Cell 3. You can put paragraphs or sentences.],
-             [Row 2, Cell 4. Variable example ends.])
-
-#let cell_3_2 = [This is Row 3, Cell 2. Only this cell uses a variable.]
-
-#table(
-  columns: 4,
-  table.header[Column 1][Column 2][Column 3][Column 4],
-  [Row 1, Cell 1], [Row 1, Cell 2], [Row 1, Cell 3], [Row 1, Cell 4],
-  ..row2,
-  [Row 3, Cell 1], cell_3_2, [Row 3, Cell 3], [Row 3, Cell 4]
-)
-
-```
-
-<!-- ```{=typst}
-#colbreak()
-#bibliography("references.bib", full: true, style: "apa")
-``` -->
-
-<!-- harvard-cite-them-right, ieee -->
-
-```{=typst}
-#pagebreak()
-#set page(columns: 1)
-```
-
-```{=typst}
-#bibliography("references.bib", title: "References", style: "apa", full: true)
 ```
