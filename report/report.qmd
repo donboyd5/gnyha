@@ -97,7 +97,7 @@ See appendix for full details.
  Explain why this is a high-quality approach.
 
 
-# Fake text to show how the report will look
+# Results
 
 ```{=typst}
 #lorem(80)
