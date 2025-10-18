@@ -7,3 +7,4 @@
 -  policyengine-us
    -  [code](https://github.com/PolicyEngine/policyengine-us)
    -  [web app](https://policyengine.org/us) [also](https://policyengine.org/us/household)
+   -  [documentation](https://policyengine.github.io/policyengine-us/)
