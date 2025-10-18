@@ -37,59 +37,18 @@ book:
   chapters:
     - index.qmd
     - get_acs.qmd
-    - get_gnyha_data.qmd
-    - call_tc_cli.qmd
-    # - steps.qmd
+    # - get_gnyha_data.qmd
+    # - call_tc_cli.qmd
+
     # - part: "Extract Data"
     #   chapters:
     #     - get_and_save_extracted_data.qmd
     #     - test_extracted_data.qmd
     #     # extracted data stays in the work_data folder and does not need to be staged
-    # - part: "Amortization Bases"
-    #   chapters:
-    #     - amortization_bases.qmd
-    #     - test_amortization_bases.qmd
-    #     - stage_amortization_bases.qmd
-    # - part: "Benefit Rules"
-    #   chapters:
-    #     - benefit_rules.qmd
-    #     - benefit_rules_test_cases.qmd
-    #     - test_benefit_rules.qmd
-    #     - stage_benefit_rules_and_test_cases.qmd
-    # - part: "Constants"
-    #   chapters:
-    #     - constants_assumptions.qmd
-    #     - test_constants_assumptions.qmd
-    #     - stage_constants_assumptions.qmd
-    # - part: "Retirees"
-    #   chapters:
-    #     - retirees.qmd
-    #     - test_retirees.qmd
-    #     - stage_retirees.qmd
-    # - part: "Retirement Rates"
-    #   chapters:
-    #     - retirement_rates.qmd
-    #     - test_retirement_rates.qmd
-    #     - stage_retirement_rates.qmd        
-    # - part: "Salary & Headcount"
-    #   chapters:
-    #     - headcount_salary.qmd
-    # - part: "Salary growth"        
-    #   chapters:
-    #     - salary_growth.qmd        
-    # - part: "Withdrawals"
-    #   chapters:
-    #     - withdrawal.qmd
-    # - part: "Assemble list for `pendata` package"
-    #   chapters:
-    #     - assemble_list.qmd
-    # - part: "Make params"
-    #   chapters:
-    #     - make_params.qmd
 
 # GROOT <- rprojroot::find_root(rprojroot::has_file(".git/index"))
 
-# possible yaml at top of files
+# possible yaml at top of files qed
 
 # ---
 # editor_options: 

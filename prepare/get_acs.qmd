@@ -1,6 +1,8 @@
-# Get American Community Survey data
+# Preliminary analysis of American Community Survey data
 
-Get and save the data we need from the ACS
+## Setup
+
+Prepare to connect to the ACS database
 
 ```{r}
 #| label: setup
@@ -27,6 +29,7 @@ library(skimr)
 library(Hmisc)
 library(lubridate)
 library(formattable)
+library(gt)
 library(janitor)
 library(vtable)
 library(quarto)
@@ -48,9 +51,89 @@ path_duckdb <- fs::path(DACS5, ACSDB)
 
 ```
 
+## Codes
 
 ```{r}
-#| label: show-tables
+
+# ESR Character 1
+# Employment status recode
+# b .N/A (less than 16 years old)
+# 1 .Civilian employed, at work
+# 2 .Civilian employed, with a job but not at work
+# 3 .Unemployed
+# 4 .Armed forces, at work
+# 5 .Armed forces, with a job but not at work
+# 6 .Not in labor force
+
+esrf <- function(x) {
+  factor(
+    x,
+    levels = c(1:6, NA_integer_),
+    labels = c(
+      "civemp_work",
+      "civemp_jobnaw",
+      "unemployed",
+      "mil_work",
+      "mil_jobnaw",
+      "nilf",
+      "agelt16"
+    ),
+    exclude = NULL
+  )
+}
+# esrf(c(1:6, NA_integer_))
+
+# MAR Character 1
+# Marital status
+# 1 .Married
+# 2 .Widowed
+# 3 .Divorced
+# 4 .Separated
+# 5 .Never married or under 15 years old
+
+marf <- function(x) {
+  factor(
+    x,
+    levels = 1:5,
+    labels = c("married", "widowed", "divorced", "separated", "single/other")
+  )
+}
+# marf(1:5)
+
+incf <- function(x) {
+  # make a factor from an income variable
+  # Define breaks
+  ybreaks <- c(seq(0, 200e3, 25e3), 500e3, Inf)
+
+  # Format the numeric bounds with commas (e.g., 25,000)
+  formatted <- scales::label_number(accuracy = 1, big.mark = ",")(ybreaks)
+
+  # Build readable labels
+  labels <- paste0(
+    c("0", paste0(">", formatted[-c(1, length(formatted))])), # left bounds
+    " - ",
+    c(paste0("≤", formatted[-1])) # right bounds
+  )
+
+  # Adjust the last label (for >500K)
+  labels[length(labels)] <- paste0(">", formatted[length(formatted) - 1])
+
+  # Create factor using cut
+  cut(
+    x,
+    breaks = ybreaks,
+    include.lowest = TRUE,
+    labels = labels
+  )
+}
+# incf(seq(0, 150e3, 15e3))
+
+```
+
+## Retrieve ACS data on NY health care workers
+
+```{r}
+#| label: connect
 #| output: true
 
 acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
@@ -59,76 +142,119 @@ DBI::dbDisconnect(acsdb)
 
 ```
 
+
 ```{r}
-#| label: test
-#| show: true
+#| label: get-nyhealthcare
+#| eval: true
 
 acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
-df <- tbl(acsdb, "pus_5year2023")
+nyacs <- tbl(acsdb, "pus_5year2023") |>
+  as_duckdb_tibble() |> # so dplyr verbs work as intended
+  dplyr::filter(state == 36) |>
+  dplyr::select(-c(pwgtp1:pwgtp80))
+glimpse(nyacs)
+names(nyacs)
 
-print(df) # needed if rendering from terminal
-
-```
-
-```{r}
-DBI::dbDisconnect(acsdb)
-```
-
-```{r}
-#| echo: false
-knitr::knit_exit()
-```
-
-
-```{r}
-#| label: examine
-#| show: true
-#| eval: false
-
-acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
-df <- tbl(acsdb, "pus_5year2023")
-
-df
-df |>
-  explain()
-count(df, fname)
-colnames(df) |> sort()
-glimpse(df)
-
-df |>
-  as_duckdb_tibble() |>
-  explain()
-
-nyacs <- df |>
-  dplyr::filter(state == 36)
-explain(nyacs)
-soccodes <- count(nyacs, socp, sort = TRUE) |>
-  as_duckdb_tibble() |>
+soccodes <- tbl(acsdb, "occcodes_5year2023") |>
+  select(socp, description) |>
   as_tibble()
 
-nurses <- nyacs |>
+nyhcare <- nyacs |>
   dplyr::filter(str_sub(socp, 1, 2) == "29") |>
+  mutate(wagp2023 = wagp * adjinc) |>
+  left_join(soccodes, by = join_by(socp)) |>
   as_tibble()
 
-tmp <- nurses |> dplyr::filter(socp == "291141") |> select(-c(pwgtp1:pwgtp80))
-ns(tmp)
-count(tmp, agep)
+DBI::dbDisconnect(acsdb)
 
-tmp |>
+```
+
+
+## NY Health care workers by occupation: Unweighted and weighted number of observations in the 2023 5-year ACS 
+
+```{r}
+#| label: counts-by-occupation
+#| output: true
+
+nyhcare |>
+  summarise(n = n(), wtdn = sum(pwgtp), .by = c(socp, description)) |>
+  arrange(desc(wtdn)) |>
+  gt() |>
+  fmt_number(decimals = 0)
+
+```
+
+## Nurses
+
+### By age
+
+```{r}
+#| label: counts-by-age
+#| output: true
+
+nyhcare |>
+  dplyr::filter(socp == "291141") |>
   dplyr::summarize(wtdn = sum(pwgtp), .by = agep) |>
   ggplot(aes(agep, wtdn)) +
-  geom_point() +
+  geom_point(colour = "blue", size = 2) +
   scale_x_continuous(breaks = seq(0, 100, 5)) +
-  ggtitle("Weighted number of nurses in NY by age")
-
-tmp |>
-  dplyr::summarize(wtdn = sum(pwgtp), .by = agep) |>
-  arrange(agep) |>
-  mutate(pct = wtdn / sum(wtdn)) |>
-  mutate(cumpct = cumsum(pct)) |>
-  janitor::adorn_totals() |>
-  kable()
-
-DBI::dbDisconnect(acsdb)
+  ggtitle(
+    "Weighted number of nurses in NY by age",
+    subtitle = "2023 5-year ACS"
+  ) +
+  theme_bw()
 
 ```
+
+### Numbers of unweighted and weighted observations by various statuses
+
+```{r}
+#| label: status-function
+
+f <- function(fvar, fvar_func, gtitle) {
+  # Convert input string (e.g., "esr") to symbol for column use
+  fvar_sym <- sym(fvar)
+
+  # Create a symbol for the new column name (e.g., esrf)
+  newcol_sym <- sym(paste0(fvar, "f"))
+
+  nyhcare |>
+    filter(socp == "291141") |>
+
+    # Apply the passed-in function, assign result to dynamic new column name
+    mutate(!!newcol_sym := fvar_func(!!fvar_sym)) |>
+
+    summarise(
+      n = n(),
+      wtdn = sum(pwgtp),
+      #.by = c(!!fvar_sym, !!newcol_sym)
+      .by = c(!!newcol_sym)
+    ) |>
+    arrange(!!newcol_sym) |>
+    janitor::adorn_totals() |>
+    #mutate(wtdpct = wtdn / wtdn[get(fvar) == "Total"]) |>
+    # mutate(wtdpct = 1) |>
+    mutate(wtdpct = wtdn / wtdn[!!newcol_sym == "Total"]) |>
+    gt() |>
+    tab_header(gtitle) |>
+    cols_align(columns = 1, align = "left") |>
+    fmt_number(columns = c(n, wtdn), decimals = 0) |>
+    fmt_percent(columns = wtdpct, decimals = 1)
+}
+
+```
+
+```{r}
+#| label: status-counts
+#| output: rue
+
+f("mar", marf, "Nurses in New York by marital status")
+f("esr", esrf, "Nurses in New York by employment status")
+f("wagp2023", incf, "Nurses in New York by wage group")
+
+# TODO: hours worked per week, region
+
+```
+
+
+
