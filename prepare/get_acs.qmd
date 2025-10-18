@@ -1,6 +1,8 @@
-# Get American Community Survey data
+# Preliminary analysis of American Community Survey data
 
-Get and save the data we need from the ACS
+## Setup
+
+Prepare to connect to the ACS database
 
 ```{r}
 #| label: setup
@@ -27,6 +29,7 @@ library(skimr)
 library(Hmisc)
 library(lubridate)
 library(formattable)
+library(gt)
 library(janitor)
 library(vtable)
 library(quarto)
@@ -48,9 +51,36 @@ path_duckdb <- fs::path(DACS5, ACSDB)
 
 ```
 
+## Codes
 
 ```{r}
-#| label: show-tables
+
+# MAR Character 1
+# Marital status
+# 1 .Married
+# 2 .Widowed
+# 3 .Divorced
+# 4 .Separated
+# 5 .Never married or under 15 years old
+
+codes <- list(
+  marf = c(married = 1, widowed = 2, divorced = 3, separated = 4, other = 5)
+)
+
+marf <- function(x) {
+  factor(
+    x,
+    levels = 1:5,
+    labels = c("married", "widowed", "divorced", "separated", "single/other")
+  )
+}
+
+```
+
+## Retrieve ACS data on NY health care workers
+
+```{r}
+#| label: connect
 #| output: true
 
 acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
@@ -59,76 +89,121 @@ DBI::dbDisconnect(acsdb)
 
 ```
 
+
 ```{r}
-#| label: test
+#| label: get-nyhealthcare
 #| show: true
+#| eval: true
 
 acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
-df <- tbl(acsdb, "pus_5year2023")
+nyacs <- tbl(acsdb, "pus_5year2023") |>
+  as_duckdb_tibble() |> # so dplyr verbs work as intended
+  dplyr::filter(state == 36) |>
+  dplyr::select(-c(pwgtp1:pwgtp80))
+glimpse(nyacs)
+names(nyacs)
 
-print(df) # needed if rendering from terminal
-
-```
-
-```{r}
-DBI::dbDisconnect(acsdb)
-```
-
-```{r}
-#| echo: false
-knitr::knit_exit()
-```
-
-
-```{r}
-#| label: examine
-#| show: true
-#| eval: false
-
-acsdb <- DBI::dbConnect(duckdb::duckdb(path_duckdb))
-df <- tbl(acsdb, "pus_5year2023")
-
-df
-df |>
-  explain()
-count(df, fname)
-colnames(df) |> sort()
-glimpse(df)
-
-df |>
-  as_duckdb_tibble() |>
-  explain()
-
-nyacs <- df |>
-  dplyr::filter(state == 36)
-explain(nyacs)
-soccodes <- count(nyacs, socp, sort = TRUE) |>
-  as_duckdb_tibble() |>
+soccodes <- tbl(acsdb, "occcodes_5year2023") |>
+  select(socp, description) |>
   as_tibble()
 
-nurses <- nyacs |>
+nyhcare <- nyacs |>
   dplyr::filter(str_sub(socp, 1, 2) == "29") |>
+  left_join(soccodes, by = join_by(socp)) |>
   as_tibble()
 
-tmp <- nurses |> dplyr::filter(socp == "291141") |> select(-c(pwgtp1:pwgtp80))
-ns(tmp)
-count(tmp, agep)
+DBI::dbDisconnect(acsdb)
 
-tmp |>
+```
+
+
+## NY Health care workers by occupation: Unweighted and weighted number of observations in the 2023 5-year ACS 
+
+```{r}
+#| label: counts-by-occupation
+#| output: true
+
+nyhcare |>
+  summarise(n = n(), wtdn = sum(pwgtp), .by = c(socp, description)) |>
+  arrange(desc(wtdn)) |>
+  gt() |>
+  fmt_number(decimals = 0)
+
+```
+
+## Nurses
+
+### By age
+
+```{r}
+#| label: counts-by-age
+#| output: true
+
+nyhcare |>
+  dplyr::filter(socp == "291141") |>
   dplyr::summarize(wtdn = sum(pwgtp), .by = agep) |>
   ggplot(aes(agep, wtdn)) +
-  geom_point() +
+  geom_point(colour = "blue", size = 2) +
   scale_x_continuous(breaks = seq(0, 100, 5)) +
-  ggtitle("Weighted number of nurses in NY by age")
-
-tmp |>
-  dplyr::summarize(wtdn = sum(pwgtp), .by = agep) |>
-  arrange(agep) |>
-  mutate(pct = wtdn / sum(wtdn)) |>
-  mutate(cumpct = cumsum(pct)) |>
-  janitor::adorn_totals() |>
-  kable()
-
-DBI::dbDisconnect(acsdb)
+  ggtitle(
+    "Weighted number of nurses in NY by age",
+    subtitle = "2023 5-year ACS"
+  ) +
+  theme_bw()
 
 ```
+
+### By marital status
+
+```{r}
+#| label: marital
+#| output: true
+
+nyhcare |>
+  filter(socp == "291141") |>
+  mutate(marf = marf(mar)) |>
+  summarise(n = n(), wtdn = sum(pwgtp), .by = c(mar, marf)) |>
+  arrange(marf) |>
+  janitor::adorn_totals() |>
+  mutate(wtdpct = wtdn / wtdn[mar == "Total"]) |>
+  kable()
+
+```
+
+### By hours worked per week
+
+
+
+### By income
+
+```{r}
+#| label: income
+#| output: true
+
+summary(nyhcare$adjinc)
+
+ybreaks <- c(seq(0, 200e3, 25e3), 500e3, Inf)
+nyhcare |>
+  filter(socp == "291141") |>
+  mutate(
+    wagp2023 = wagp * adjinc,
+    wagp_grp = cut(wagp2023, breaks = ybreaks, include.lowest = TRUE)
+  ) |>
+  summarise(wtdn = sum(pwgtp), .by = wagp_grp) |>
+  arrange(wagp_grp, wtdn)
+# ggplot(aes(agep, wtdn)) +
+# geom_point(colour = "blue", size = 2) +
+# scale_x_continuous(breaks = seq(0, 100, 5)) +
+# ggtitle(
+#   "Weighted number of nurses in NY by age",
+#   subtitle = "2023 5-year ACS"
+# ) +
+# theme_bw()
+
+```
+
+
+
+### By region
+
+
